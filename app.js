@@ -3,6 +3,9 @@ const path = require('path')
 const http = require('http')
 const socketio = require('socket.io')
 
+const { generateMessage, generateLocationMessage } = require('./utils/messages')
+const { addUser, removeUser, getUserInRoom, getUser } = require('./utils/users')
+
 const app = express()
 const port = 3000
 const server = http.createServer(app)
@@ -22,16 +25,48 @@ io.on('connection', (socket) => {
     //     io.emit('countUpdated', count)
     // })
 
-    socket.emit('message', 'Welcome !')
-    socket.broadcast.emit('message', 'A new user has joined!')
+    // socket.emit: send an event to a specific client
+    // io.emit: send event to every connected client
+    // socket.broadcast.emit: send an event to every connected client except for this one
 
-    socket.on('sendMessage', message => {
-        io.emit('message', message)
+    socket.on('join', ({ username, room }, callback) => {
+        const { error, user } = addUser({ id: socket.id, username, room })
+
+        if (error) {
+            return callback(error)
+        }
+
+        socket.join(user.room)
+
+        socket.emit('message', generateMessage('Admin', 'Welcome !'))
+        socket.broadcast.to(user.room).emit('message', generateMessage('Admin', `${user.username} has joined!`))
+
+        callback()
+    })
+
+    socket.on('sendMessage', (message, callback) => {
+        const user = getUser(socket.id)
+        io.to(user.room).emit('message', generateMessage(user.username, message))
+        // io.emit('message', generateMessage(message))
+        callback()
+    })
+
+    socket.on('sendLocation', (croods, callback) => {
+        const user = getUser(socket.io)
+        io.to(user.room).emit('locationMessage', generateLocationMessage(user.username, `https://google.com/maps?q=${croods.latitude},${croods.longitude}`))
+        // io.emit('locationMessage', generateLocationMessage(`https://google.com/maps?q=${croods.latitude},${croods.longitude}`))
+        callback()
     })
 
     socket.on('disconnect', () => {
-        io.emit('message', 'A user has left!')
+        const user = removeUser(socket.id)
+
+        if (user) {
+            io.to(user.room).emit('message', generateMessage('Admin', `${user.username} has left!`))
+        }
+
     })
+
 })
 
 
