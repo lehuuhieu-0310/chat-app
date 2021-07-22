@@ -47,29 +47,29 @@ const getUserInRoom = room => {
     return users.filter(user => user.room === room)
 }
 
-addUser({
-    id: 22,
-    username: 'hieu22',
-    room: 'hieupro'
-})
+// addUser({
+//     id: 22,
+//     username: 'hieu22',
+//     room: 'hieupro'
+// })
 
-addUser({
-    id: 23,
-    username: 'hieu23',
-    room: 'hieupro'
-})
+// addUser({
+//     id: 23,
+//     username: 'hieu23',
+//     room: 'hieupro'
+// })
 
-addUser({
-    id: 24,
-    username: 'hieu24',
-    room: 'hieupro'
-})
+// addUser({
+//     id: 24,
+//     username: 'hieu24',
+//     room: 'hieupro'
+// })
 
 // const user = getUser(24)
 // console.log(user)
 
-const userList = getUserInRoom('hieupro')
-console.log(userList)
+// const userList = getUserInRoom('hieupro')
+// console.log(userList)
 
 // console.log(users)
 

@@ -55,6 +55,10 @@ io.on('connection', (socket) => {
         const user = getUser(socket.io)
         io.to(user.room).emit('locationMessage', generateLocationMessage(user.username, `https://google.com/maps?q=${croods.latitude},${croods.longitude}`))
         // io.emit('locationMessage', generateLocationMessage(`https://google.com/maps?q=${croods.latitude},${croods.longitude}`))
+        io.to(user.room).emit('roomData', {
+            room: user.room,
+            users: getUserInRoom(user.room)
+        })
         callback()
     })
 
@@ -63,6 +67,10 @@ io.on('connection', (socket) => {
 
         if (user) {
             io.to(user.room).emit('message', generateMessage('Admin', `${user.username} has left!`))
+            io.to(user.room).emit('roomData', {
+                room: user.room,
+                users: getUserInRoom(user.room)
+            })
         }
 
     })
