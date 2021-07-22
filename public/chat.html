@@ -27,7 +27,7 @@
     <script id="location-message-template" type="html/text">
       <div>
           <p>
-              {{username}} {{createAt}} - <a href="{{url}}" target="_blank">My current location</a>
+              <strong>{{username}}</strong> {{createAt}} - <a href="{{url}}" target="_blank">My current location</a>
           </p>
       </div>
     </script>
@@ -38,7 +38,7 @@
       <ul class="users">
         {{#users}}
         <li>{{username}}</li>
-        {{/user}}
+        {{/users}}
       </ul>
     </script>
 

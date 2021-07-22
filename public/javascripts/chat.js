@@ -61,7 +61,7 @@ socket.on('message', (message) => {
     autoScroll()
 })
 
-socket.on('locationMessage', message => {
+socket.on('locationMessage', (message) => {
     console.log(message)
     const html = Mustache.render(locationMessageTemplate, {
         username: message.username,

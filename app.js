@@ -40,19 +40,29 @@ io.on('connection', (socket) => {
 
         socket.emit('message', generateMessage('Admin', 'Welcome !'))
         socket.broadcast.to(user.room).emit('message', generateMessage('Admin', `${user.username} has joined!`))
+        io.to(user.room).emit('roomData', {
+            room: user.room,
+            users: getUserInRoom(user.room)
+        })
 
         callback()
     })
 
     socket.on('sendMessage', (message, callback) => {
         const user = getUser(socket.id)
+        console.log(user)
         io.to(user.room).emit('message', generateMessage(user.username, message))
         // io.emit('message', generateMessage(message))
+        io.to(user.room).emit('roomData', {
+            room: user.room,
+            users: getUserInRoom(user.room)
+        })
         callback()
     })
 
     socket.on('sendLocation', (croods, callback) => {
-        const user = getUser(socket.io)
+        const user = getUser(socket.id)
+        console.log(user)
         io.to(user.room).emit('locationMessage', generateLocationMessage(user.username, `https://google.com/maps?q=${croods.latitude},${croods.longitude}`))
         // io.emit('locationMessage', generateLocationMessage(`https://google.com/maps?q=${croods.latitude},${croods.longitude}`))
         io.to(user.room).emit('roomData', {
