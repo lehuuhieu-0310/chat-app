@@ -7,23 +7,15 @@ const { generateMessage, generateLocationMessage } = require('./utils/messages')
 const { addUser, removeUser, getUserInRoom, getUser } = require('./utils/users')
 
 const app = express()
-const port = 3000
+const port = process.env.PORT || 3000
 const server = http.createServer(app)
 const io = socketio(server)
 
 app.use(express.static(path.join(__dirname, '/public')))
 
-let count = 0
 
 io.on('connection', (socket) => {
     console.log('WebSocket connect successfully')
-
-    // socket.emit('countUpdated', count)
-
-    // socket.on('increment', () => {
-    //     count++
-    //     io.emit('countUpdated', count)
-    // })
 
     // socket.emit: send an event to a specific client
     // io.emit: send event to every connected client
